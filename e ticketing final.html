@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucy Ticketing website</title>
+    <link rel="shortcut icon" href="fav.png" type="image/x-icon" />
+    <link rel="stylesheet" href="n.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">
+          <i class="fas fa-ticket-alt"></i>
+          Lucy Ticketing
+        </div>
+        <button class="menu-toggle" id="menuToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Events</a></li>
+          <li><a href="#">Football</a></li>
+          <li><a href="#">Concerts</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Your Gateway to Unforgettable Experiences</h1>
+        <p>Book tickets for the hottest football matches and music concerts</p>
+        <a href="#events" class="btn">Explore Events</a>
+      </div>
+    </section>
+
+    <div class="container">
+      <h2 class="section-title" id="events">Upcoming Events</h2>
+
+      <div class="events">
+        <div class="event-card">
+          <img src="somali vs uganda.jpg"  />
+          <div class="event-content">
+            <h3 class="event-title">Champions League Final</h3>
+            <p class="event-date">June 10, 2026 • 8:00 PM</p>
+            <p class="event-desc">
+              Watch the top European clubs battle for the prestigious trophy at
+              the emirates Stadium.
+            </p>
+            <p class="event-price">UGX 10,000</p>
+            <button
+              class="btn"
+              onclick="selectEvent('Champions League Final', 10000, 'football')"
+            >
+              Buy Tickets
+            </button>
+          </div>
+        </div>
+
+        <div class="event-card">
+          <img src="festival.jpg" alt="Music Concert" class="event-img" />
+          <div class="event-content">
+            <h3 class="event-title">Summer Music Festival</h3>
+            <p class="event-date">Sept 15, 2025 • 6:00 PM</p>
+            <p class="event-desc">
+              Enjoy performances from our top ugandan artists across multiple
+              genres in this day-long festival.
+            </p>
+            <p class="event-price">UGX 30,000</p>
+            <button
+              class="btn"
+              onclick="selectEvent('Summer Music Festival', 30000, 'concert')"
+            >
+              Buy Tickets
+            </button>
+          </div>
+        </div>
+
+        <div class="event-card">
+          <img
+            src="somali vs uganda.jpg"
+            alt="Football Match"
+            class="event-img"
+          />
+          <div class="event-content">
+            <h3 class="event-title">UGANDA VS SOMALIA</h3>
+            <p class="event-date">September 5, 2025 • 7:00 PM</p>
+            <p class="event-desc">
+              Witness the intense rivalry between the two African giant in this
+              thrilling match.
+            </p>
+            <p class="event-price">UGX 50,000</p>
+            <button
+              class="btn"
+              onclick="selectEvent('Local Derby Match', 50000, 'football')"
+            >
+              Buy Tickets
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i> Payment successful! Your ticket has
+        been sent to your email.
+      </div>
+
+      <div class="payment-section" id="paymentSection">
+        <h2 class="section-title">Purchase Tickets</h2>
+
+        <div class="info-box">
+          <p>
+            <i class="fas fa-info-circle"></i> All payments will be processed to
+            mobile money number: <span class="highlight">+256787543387</span>
+          </p>
+        </div>
+
+        <form id="paymentForm">
+          <div class="form-group">
+            <label for="eventSelect">Select Event</label>
+            <select
+              class="form-control"
+              id="eventSelect"
+              required
+              onchange="updateSeatMap()"
+            >
+              <option value="">-- Select an Event --</option>
+              <option
+                value="Champions League Final"
+                data-price="75"
+                data-type="football"
+              >
+                Champions League Final - UGX 10,000
+              </option>
+              <option
+                value="Summer Music Festival"
+                data-price="60"
+                data-type="concert"
+              >
+                Summer Music Festival - UGX 30,000
+              </option>
+              <option
+                value="Local Derby Match"
+                data-price="40"
+                data-type="football"
+              >
+                UGA VS SOM - UGX 50,000
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phone"
+              placeholder="Enter your phone number"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Number of Tickets</label>
+            <input
+              type="number"
+              class="form-control"
+              id="quantity"
+              min="1"
+              value="1"
+              required
+              onchange="updateSeatMap()"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Select Your Seats</label>
+            <div id="seatMapContainer">
+              <!-- Seat map will be generated here -->
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Select Payment Method</label>
+            <div class="payment-options">
+              <div class="payment-option" onclick="selectPayment('mtn')">
+                <img src="MTN.png" alt="MTN Mobile Money" />
+                <p>MTN Mobile Money</p>
+              </div>
+              <div class="payment-option" onclick="selectPayment('airtel')">
+                <img src="AIRTEL.jpg" alt="Airtel Money" />
+                <p>Airtel Money</p>
+              </div>
+            </div>
+            <input type="hidden" id="selectedPayment" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phonePayment">Mobile Money Phone Number</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phonePayment"
+              placeholder="Enter your mobile money number"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn" style="width: 100%">
+            <i class="fas fa-lock"></i> Pay Now
+          </button>
+        </form>
+
+        <div class="receipt" id="receipt">
+          <h3>Payment Receipt</h3>
+          <div class="receipt-details" id="receiptDetails">
+            <!-- Receipt details will be inserted here -->
+          </div>
+        </div>
+      </div>
+
+      <div class="email-simulation" id="emailSimulation">
+        <div class="email-header">
+          <h3><i class="fas fa-envelope"></i> Sending Your E-Ticket</h3>
+        </div>
+        <div class="email-content">
+          <div class="email-row">
+            <span class="email-label">To:</span>
+            <span id="email-to">user@example.com</span>
+          </div>
+          <div class="email-row">
+            <span class="email-label">From:</span>
+            <span>lucyticketing@gmail.com</span>
+          </div>
+          <div class="email-row">
+            <span class="email-label">Subject:</span>
+            <span
+              >Your E-Ticket for <span id="email-event">Event Name</span></span
+            >
+          </div>
+
+          <div class="progress-bar">
+            <div class="progress" id="email-progress"></div>
+          </div>
+
+          <div class="email-status" id="email-status">
+            Preparing your ticket...
+          </div>
+        </div>
+      </div>
+
+      <div class="ticket" id="ticket">
+        <div class="ticket-header">
+          <h2>Your E-Ticket</h2>
+          <p>This ticket has been sent to your email</p>
+        </div>
+        <div class="ticket-body">
+          <div class="ticket-info">
+            <h3>Event Information</h3>
+            <div class="ticket-details">
+              <div class="ticket-detail">
+                <span class="detail-label">Event:</span>
+                <span class="detail-value" id="ticket-event"
+                  >Champions League Final</span
+                >
+              </div>
+              <div class="ticket-detail">
+                <span class="detail-label">Date & Time:</span>
+                <span class="detail-value" id="ticket-date"
+                  >June 10, 2023 • 8:00 PM</span
+                >
+              </div>
+              <div class="ticket-detail">
+                <span class="detail-label">Venue:</span>
+                <span class="detail-value" id="ticket-venue"
+                  >National Stadium</span
+                >
+              </div>
+              <div class="ticket-detail">
+                <span class="detail-label">Section:</span>
+                <span class="detail-value" id="ticket-section">East Stand</span>
+              </div>
+              <div class="ticket-detail">
+                <span class="detail-label">Row:</span>
+                <span class="detail-value" id="ticket-row">F</span>
+              </div>
+              <div class="ticket-detail">
+                <span class="detail-label">Seat(s):</span>
+                <span class="detail-value" id="ticket-seats">12, 13</span>
+              </div>
+            </div>
+          </div>
+          <div class="ticket-qr">
+            <div id="qrcode"></div>
+            <p>Scan this QR code at the entrance</p>
+            <div class="ticket-number">
+              Ticket #: <span id="ticket-number">TCK-2023-0085</span>
+            </div>
+          </div>
+        </div>
+        <div class="ticket-footer">
+          <p>
+            Please present this ticket at the venue entrance. This ticket is
+            non-transferable.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="successModal">
+      <div class="modal-content">
+        <div class="modal-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Payment Successful!</h2>
+        <p>Your tickets have been sent to your email address.</p>
+        <p>Check your inbox for the electronic tickets.</p>
+        <button class="btn" style="margin-top: 1.5rem" onclick="closeModal()">
+          View Ticket
+        </button>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <h3>Lucy Ticketing</h3>
+        <p>The only relaible source to purchase your tickets</p>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook"><img src="facebook.png" alt="facebook"></i></a>
+          <a href="#"><i class="fab fa-twitter"><img src="x.jpg" alt="twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"><img src="instagram.jpg" alt="instagram"></i></a>
+        </div>
+        <p>&copy; 2025 Lucy Ticketing. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      let selectedEvent = null;
+      let selectedEventPrice = 0;
+      let selectedEventType = "";
+      let selectedPayment = "";
+      let selectedSeats = [];
+
+      function selectEvent(event, price, type) {
+        selectedEvent = event;
+        selectedEventPrice = price;
+        selectedEventType = type;
+        document.getElementById("eventSelect").value = event;
+        document.getElementById("paymentSection").style.display = "block";
+        updateSeatMap();
+
+        // Scroll to payment form
+        document
+          .getElementById("paymentForm")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      function selectPayment(payment) {
+        selectedPayment = payment;
+        document.getElementById("selectedPayment").value = payment;
+
+        const paymentOptions = document.querySelectorAll(".payment-option");
+        paymentOptions.forEach((option) => option.classList.remove("selected"));
+
+        event.currentTarget.classList.add("selected");
+      }
+
+      function updateSeatMap() {
+        const eventSelect = document.getElementById("eventSelect");
+        const quantityInput = document.getElementById("quantity");
+        const seatMapContainer = document.getElementById("seatMapContainer");
+
+        if (!eventSelect.value) return;
+
+        const eventType =
+          eventSelect.options[eventSelect.selectedIndex].getAttribute(
+            "data-type"
+          );
+        const quantity = parseInt(quantityInput.value) || 1;
+
+        let seatMapHTML = "";
+
+        if (eventType === "football") {
+          seatMapHTML = `
+                    <div class="seat-section">
+                        <p class="seat-map-label">East Stand ($${selectedEventPrice})</p>
+                        <div class="seat-map">
+                            ${generateSeatRow("A", 10, quantity)}
+                            ${generateSeatRow("B", 10, quantity)}
+                            ${generateSeatRow("C", 10, quantity)}
+                            ${generateSeatRow("D", 10, quantity)}
+                            ${generateSeatRow("E", 10, quantity)}
+                            ${generateSeatRow("F", 10, quantity)}
+                        </div>
+                    </div>
+                `;
+        } else {
+          seatMapHTML = `
+                    <div class="seat-section">
+                        <p class="seat-map-label">Front Stage ($${selectedEventPrice})</p>
+                        <div class="seat-map">
+                            ${generateSeatRow("A", 8, quantity)}
+                            ${generateSeatRow("B", 8, quantity)}
+                            ${generateSeatRow("C", 8, quantity)}
+                        </div>
+                    </div>
+                    <div class="seat-section">
+                        <p class="seat-map-label">Middle Section ($${
+                          selectedEventPrice - 10
+                        })</p>
+                        <div class="seat-map">
+                            ${generateSeatRow("D", 10, quantity)}
+                            ${generateSeatRow("E", 10, quantity)}
+                            ${generateSeatRow("F", 10, quantity)}
+                        </div>
+                    </div>
+                `;
+        }
+
+        seatMapContainer.innerHTML = seatMapHTML;
+
+        // Add event listeners to seats
+        const seats = document.querySelectorAll(".seat:not(.occupied)");
+        seats.forEach((seat) => {
+          seat.addEventListener("click", () => {
+            const seatId = seat.getAttribute("data-seat");
+            const index = selectedSeats.indexOf(seatId);
+
+            if (index > -1) {
+              // Deselect seat
+              selectedSeats.splice(index, 1);
+              seat.classList.remove("selected");
+            } else {
+              // Select seat if we haven't reached the quantity limit
+              if (selectedSeats.length < quantity) {
+                selectedSeats.push(seatId);
+                seat.classList.add("selected");
+              }
+            }
+          });
+        });
+      }
+
+      function generateSeatRow(row, seats, quantity) {
+        let html = "";
+        for (let i = 1; i <= seats; i++) {
+          const seatId = `${row}${i}`;
+          // Randomly occupy some seats
+          const isOccupied = Math.random() < 0.3;
+          html += `<div class="seat ${
+            isOccupied ? "occupied" : ""
+          }" data-seat="${seatId}">${seatId}</div>`;
+        }
+        return html;
+      }
+
+      function generateTicket() {
+        const email = document.getElementById("email").value;
+        const event = document.getElementById("eventSelect").value;
+        const quantity =
+          parseInt(document.getElementById("quantity").value) || 1;
+
+        // Set ticket details
+        document.getElementById("ticket-event").textContent = event;
+        document.getElementById("ticket-venue").textContent =
+          selectedEventType === "football"
+            ? "National Stadium"
+            : "City Concert Hall";
+        document.getElementById("ticket-section").textContent =
+          selectedEventType === "football" ? "East Stand" : "Front Stage";
+        document.getElementById("ticket-row").textContent = selectedSeats[0]
+          ? selectedSeats[0].charAt(0)
+          : "F";
+        document.getElementById("ticket-seats").textContent = selectedSeats
+          .map((seat) => seat.substring(1))
+          .join(", ");
+
+        // Generate random ticket number
+        const ticketNumber =
+          "TCK-" +
+          new Date().getFullYear() +
+          "-" +
+          Math.floor(1000 + Math.random() * 9000);
+        document.getElementById("ticket-number").textContent = ticketNumber;
+
+        // Generate QR code
+        const qrData = `TICKET: ${ticketNumber}\nEVENT: ${event}\nSEATS: ${selectedSeats.join(
+          ", "
+        )}\nEMAIL: ${email}`;
+        document.getElementById("qrcode").innerHTML = "";
+        QRCode.toCanvas(
+          document.getElementById("qrcode"),
+          qrData,
+          {
+            width: 180,
+            margin: 1,
+            color: {
+              dark: "#4a00e0",
+              light: "#ffffff",
+            },
+          },
+          function (error) {
+            if (error) console.error(error);
+          }
+        );
+
+        // Show ticket
+        document.getElementById("ticket").style.display = "block";
+      }
+
+      function simulateEmailSending() {
+        const email = document.getElementById("email").value;
+        const event = document.getElementById("eventSelect").value;
+
+        // Show email simulation
+        document.getElementById("emailSimulation").style.display = "block";
+        document.getElementById("email-to").textContent = email;
+        document.getElementById("email-event").textContent = event;
+
+        // Scroll to email simulation
+        document
+          .getElementById("emailSimulation")
+          .scrollIntoView({ behavior: "smooth" });
+
+        // Simulate email sending process
+        const progressBar = document.getElementById("email-progress");
+        const emailStatus = document.getElementById("email-status");
+
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 5;
+          progressBar.style.width = `${progress}%`;
+
+          if (progress === 20) {
+            emailStatus.textContent = "Connecting to mail server...";
+          } else if (progress === 40) {
+            emailStatus.textContent = "Generating your ticket...";
+          } else if (progress === 60) {
+            emailStatus.textContent = "Attaching QR code...";
+          } else if (progress === 80) {
+            emailStatus.textContent = "Sending email...";
+          } else if (progress >= 100) {
+            clearInterval(interval);
+            emailStatus.innerHTML =
+              "<i class='fas fa-check-circle' style='color: var(--success);'></i> Email sent successfully!";
+            progressBar.style.width = "100%";
+
+            // Show success modal after a delay
+            setTimeout(() => {
+              document.getElementById("successModal").style.display = "flex";
+              generateTicket();
+            }, 1000);
+          }
+        }, 200);
+      }
+
+      document
+        .getElementById("paymentForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value;
+          const phone = document.getElementById("phone").value;
+          const quantity =
+            parseInt(document.getElementById("quantity").value) || 1;
+          const event = document.getElementById("eventSelect").value;
+          const phonePayment = document.getElementById("phonePayment").value;
+          const totalPrice = selectedEventPrice * quantity;
+
+          if (!selectedPayment) {
+            alert("Please select a payment method");
+            return;
+          }
+
+          if (selectedSeats.length !== quantity) {
+            alert(`Please select exactly ${quantity} seat(s)`);
+            return;
+          }
+
+          // Show receipt
+          const receiptDetails = document.getElementById("receiptDetails");
+          receiptDetails.innerHTML = `
+                <p><strong>Event:</strong> ${event}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>Tickets:</strong> ${quantity}</p>
+                <p><strong>Seats:</strong> ${selectedSeats.join(", ")}</p>
+                <p><strong>Unit Price:</strong> $${selectedEventPrice}.00</p>
+                <p><strong>Total Amount:</strong> $${totalPrice}.00</p>
+                <p><strong>Payment Method:</strong> ${selectedPayment.toUpperCase()} Mobile Money</p>
+                <p><strong>Payment Phone:</strong> ${phonePayment}</p>
+                <p><strong>Recipient Phone:</strong> <span class="highlight">0753561719</span></p>
+                <p><strong>Status:</strong> <span class="highlight">Payment processed successfully</span></p>
+            `;
+
+          document.getElementById("receipt").style.display = "block";
+
+          // Simulate payment processing
+          setTimeout(() => {
+            simulateEmailSending();
+
+            // Reset form
+            document.getElementById("paymentForm").reset();
+            selectedPayment = "";
+            selectedSeats = [];
+            document
+              .querySelectorAll(".payment-option")
+              .forEach((opt) => opt.classList.remove("selected"));
+            document
+              .querySelectorAll(".seat")
+              .forEach((seat) => seat.classList.remove("selected"));
+          }, 2000);
+        });
+
+      function closeModal() {
+        document.getElementById("successModal").style.display = "none";
+        document
+          .getElementById("ticket")
+          .scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Add selected class to payment option when clicked
+      document.querySelectorAll(".payment-option").forEach((option) => {
+        option.addEventListener("click", function () {
+          document
+            .querySelectorAll(".payment-option")
+            .forEach((opt) => opt.classList.remove("selected"));
+          this.classList.add("selected");
+        });
+      });
+
+      // Mobile menu toggle
+      document
+        .getElementById("menuToggle")
+        .addEventListener("click", function () {
+          document.getElementById("navLinks").classList.toggle("show");
+        });
+
+      // Initialize seat map when event selection changes
+      document
+        .getElementById("eventSelect")
+        .addEventListener("change", function () {
+          const selectedOption = this.options[this.selectedIndex];
+          selectedEvent = this.value;
+          selectedEventPrice = parseInt(
+            selectedOption.getAttribute("data-price")
+          );
+          selectedEventType = selectedOption.getAttribute("data-type");
+          updateSeatMap();
+        });
+
+      // Initialize seat map when quantity changes
+      document
+        .getElementById("quantity")
+        .addEventListener("change", updateSeatMap);
+      document
+        .getElementById("quantity")
+        .addEventListener("input", updateSeatMap);
+    </script>
+  </body>
+</html>
